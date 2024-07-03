@@ -1,3 +1,6 @@
+# Ignore virtual environment
+env/
+
 # Every predicted file
 data/predict/*
 
