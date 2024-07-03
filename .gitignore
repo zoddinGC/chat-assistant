@@ -1,6 +1,9 @@
 # Ignore virtual environment
 env/
 
+# Ignore video file
+**.mp4
+
 # Every predicted file
 data/predict/*
 
