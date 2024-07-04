@@ -3,20 +3,15 @@ import fitz
 import io
 
 from modules.managers.folder_manager import check_folder_existence
+from modules.managers.string_manager import transform_github_url
 
-def __transform_github_url(url: str) -> str:
-    if not 'raw' in url:
-        url = url.replace('github', 'raw.githubusercontent')
-        url = url.replace('/blob', '')
-
-    return url
 
 def get_text_from_github(url: str) -> str:
     """
     
     """
     # Adjusted URL to fetch the raw content
-    url = __transform_github_url(url)
+    url = transform_github_url(url)
 
     # Make a GET request to fetch the raw file content
     response = requests.get(url)
@@ -31,7 +26,7 @@ def get_text_from_github(url: str) -> str:
 
 def get_pdf_from_github(url: str) -> str:
     # Adjusted URL to fetch the raw content
-    url = __transform_github_url(url)
+    url = transform_github_url(url)
 
     # Make a GET request to fetch the raw PDF content
     response = requests.get(url)
@@ -59,7 +54,7 @@ def get_pdf_from_github(url: str) -> str:
 
 def save_video_from_github(url: str, save_path: str):
     # Adjusted URL to fetch the raw content
-    url = __transform_github_url(url)
+    url = transform_github_url(url)
 
     # Make a GET request to fetch the raw video content
     response = requests.get(url, stream=True)

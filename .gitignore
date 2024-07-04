@@ -1,6 +1,10 @@
 # Ignore virtual environment
 env/
 
+# Temporary folder
+temp/
+temp/*
+
 # Ignore video file
 **.mp4
 
