@@ -1,12 +1,13 @@
 # Python libraries
 import moviepy.editor as mp
-import speech_recognition as sr
+import whisper
+import os
 
 from os import listdir
 from pydub import AudioSegment
 
 # Local imports
-from modules.managers.folder_manager import check_folder_existence
+from modules.managers.folder_manager import check_folder_existence, delete_file
 
 
 def extract_audio_from_video(video_path: str) -> str:
@@ -37,20 +38,32 @@ def extract_audio_from_video(video_path: str) -> str:
 
     return audio_path
 
-def transcript_video(video_path: str) -> str:
+def transcript_video(video_path: str, model_performance: str = 'balanced') -> str:
     # Extract audio from video
     audio_path = extract_audio_from_video(video_path)
 
-    # Initialize recognizer class (for transcript audio)
-    r = sr.Recognizer()
+    # Ensure the audio file path is correct
+    if not os.path.exists(audio_path):
+        raise FileNotFoundError(f"Audio file not found: {audio_path}")
+    
+    # Select the model based on the performance users need
+    model_options = {
+        'speed': 'tiny',
+        'balanced': 'small',
+        'accuracy': 'medium'
+    }
 
-    # Open audio file
-    with sr.AudioFile(audio_path) as source:
-        audio_text = r.record(source)
+    # Load whisper model
+    model = whisper.load_model(model_options[model_performance]) # VRAM: large 10 GB / medium 5 GB / small 2 GB / base 1 GB / tiny 1 GB (superfast)
 
-    text = r.recognize_google(audio_text, language='pt-BR')
+    # Transcribe the audio
+    result = model.transcribe(
+        audio_path, language='pt', temperature=0.0, word_timestamps=True
+    )
 
-    return text
+    delete_file(audio_path)
+
+    return result
 
 
 if __name__ == '__main__':
