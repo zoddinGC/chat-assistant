@@ -49,6 +49,12 @@ def clean_folder(folders:str or list, main_folder:bool=False):
         if main_folder:
             rmtree(folder)
 
+def delete_file(file_path: str):
+    try:
+        os.unlink(file_path)
+    except Exception as e:
+        print(f'Failed to delete {file_path!r}. Error: {e}')
+
 
 if __name__ == '__main__':
     pass
