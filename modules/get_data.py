@@ -3,7 +3,7 @@ import fitz
 import io
 
 from modules.managers.folder_manager import check_folder_existence
-from modules.managers.string_manager import transform_github_url
+from modules.managers.string_manager import transform_github_url, clean_text
 
 
 def get_text_from_github(url: str) -> str:
@@ -20,7 +20,8 @@ def get_text_from_github(url: str) -> str:
     if response.status_code == 200:
         # Retrieve the content of the file
         file_content = response.text
-        return file_content
+
+        return clean_text(file_content)
     
     raise ValueError(f"Failed to retrieve data from {url!r}. Status code: {response.status_code}")
 
@@ -48,7 +49,7 @@ def get_pdf_from_github(url: str) -> str:
         # Close the PDF document
         pdf_document.close()
 
-        return pdf_text
+        return clean_text(pdf_text)
 
     raise ValueError(f"Failed to retrieve data from {url!r}. Status code: {response.status_code}")
 
