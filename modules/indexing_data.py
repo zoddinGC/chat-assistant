@@ -1,8 +1,6 @@
 import numpy as np
 import faiss
 
-from tqdm.auto import tqdm
-
 from modules.embedd_text import embedding_in_chunks, pad_embedding, embed_text
 
 class IndexingData():

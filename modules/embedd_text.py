@@ -8,7 +8,7 @@ from modules.tokenize_text import create_text_splitter
 
 def embed_text(text: str) -> str:
     # String for model AI in hugginface.co/models
-    model_id = 'neuralmind/bert-base-portuguese-cased'
+    model_id = 'mrm8488/bert-base-portuguese-cased-finetuned-squad-v1-pt'
 
     # Load pre-trained model and tokenizer
     embedder = AutoTokenizer.from_pretrained(model_id)
@@ -23,6 +23,9 @@ def embed_text(text: str) -> str:
 
 def pad_embedding(embedding: np.array, pad_dimensions: tuple[int, int]):
     max_length, max_dim = pad_dimensions
+
+    if embedding.shape[0] > max_length:
+        embedding = embedding[:max_length]
 
     padded_embedding = np.pad(embedding, ((0, max_length - embedding.shape[0]), (0, max_dim - embedding.shape[1])), 'constant')
 
