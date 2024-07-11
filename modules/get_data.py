@@ -6,7 +6,7 @@ from modules.managers.folder_manager import check_folder_existence
 from modules.managers.string_manager import transform_github_url, clean_text
 
 
-def get_text_from_github(url: str) -> str:
+def get_text_from_github(url: str) -> dict:
     """
     
     """
@@ -21,11 +21,11 @@ def get_text_from_github(url: str) -> str:
         # Retrieve the content of the file
         file_content = response.text
 
-        return clean_text(file_content)
+        return {'text': file_content, 'type': 'text'}
     
     raise ValueError(f"Failed to retrieve data from {url!r}. Status code: {response.status_code}")
 
-def get_pdf_from_github(url: str) -> str:
+def get_pdf_from_github(url: str) -> dict:
     # Adjusted URL to fetch the raw content
     url = transform_github_url(url)
 
@@ -41,15 +41,15 @@ def get_pdf_from_github(url: str) -> str:
         pdf_document = fitz.open(stream=pdf_file, filetype="pdf")
         
         # Extract text from each page
-        pdf_text = ""
+        pdf_text = []
         for page_num in range(pdf_document.page_count):
             page = pdf_document[page_num]
-            pdf_text += page.get_text()
+            pdf_text.append(page.get_text())
         
         # Close the PDF document
         pdf_document.close()
 
-        return clean_text(pdf_text)
+        return {'text': ''.join(pdf_text), 'pages_text': pdf_text, 'type': 'pdf'}
 
     raise ValueError(f"Failed to retrieve data from {url!r}. Status code: {response.status_code}")
 
