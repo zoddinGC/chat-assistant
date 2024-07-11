@@ -38,7 +38,7 @@ def extract_audio_from_video(video_path: str) -> str:
 
     return audio_path
 
-def transcript_video(video_path: str, model_performance: str = 'balanced') -> str:
+def transcript_video(video_path: str, model_performance: str = 'balanced') -> dict:
     # Extract audio from video
     audio_path = extract_audio_from_video(video_path)
 
@@ -60,6 +60,9 @@ def transcript_video(video_path: str, model_performance: str = 'balanced') -> st
     result = model.transcribe(
         audio_path, language='pt', temperature=0.0, word_timestamps=True
     )
+
+    # Add type key
+    result['type'] = 'video'
 
     delete_file(audio_path)
 
