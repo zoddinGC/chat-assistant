@@ -16,7 +16,7 @@ class IndexingData():
         data = self.get_data
 
         # Get the dimensions to use in index
-        dim = data[0].shape[0]
+        dim = data.shape[1]
 
         # Create an index
         index = faiss.IndexFlatL2(dim)  # L2 distance (Euclidean)
@@ -35,8 +35,6 @@ class IndexingData():
     def search_index(self, query: str, top_k: int = 5) -> tuple[int, int]:
         # Vectorize the query
         query_vector = self.query_to_vector(query)
-
-        print(query_vector)
 
         # Query the index
         D, I = self.__index.search(query_vector, k=top_k)  # Search for the 5 nearest neighbors
