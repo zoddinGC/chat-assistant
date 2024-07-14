@@ -8,7 +8,13 @@ from modules.managers.string_manager import transform_github_url
 
 def get_text_from_github(url: str) -> dict:
     """
-    
+        Receives a raw URL from github and get its content if it is a
+        unique file. Example: a text.txt file will return a dictionary
+        with the content and its type (text).
+
+        :param url: A string for GitHub content
+        :return: A dictionary with its content and type 'text':text content,
+        'type':'text'
     """
     # Adjusted URL to fetch the raw content
     url = transform_github_url(url)
@@ -26,6 +32,16 @@ def get_text_from_github(url: str) -> dict:
     raise ValueError(f"Failed to retrieve data from {url!r}. Status code: {response.status_code}")
 
 def get_pdf_from_github(url: str) -> dict:
+    """
+        Receives a raw URL from github and get its content if it is a
+        unique file. Example: a document.pdf file will return a dictionary
+        with the content and its type (PDF).
+
+        :param url: A string for GitHub content
+        :return: A dictionary with its content and type 'text':all text joined,
+        'pages_text':a list with all content, each index indicates one page,
+        'type':'pdf'
+    """
     # Adjusted URL to fetch the raw content
     url = transform_github_url(url)
 
@@ -54,6 +70,13 @@ def get_pdf_from_github(url: str) -> dict:
     raise ValueError(f"Failed to retrieve data from {url!r}. Status code: {response.status_code}")
 
 def save_video_from_github(url: str, save_path: str):
+    """
+        Retreive a video from a Github URL and save it as a local file. It is
+        necessary to save to process instead of saving it in memory.
+
+        :param url: A Github URL to the video
+        :param save_path: A string containing the local to save the file
+    """
     # Adjusted URL to fetch the raw content
     url = transform_github_url(url)
 
