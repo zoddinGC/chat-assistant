@@ -16,18 +16,6 @@ def transform_github_url(url: str) -> str:
         return url.replace('github.com', 'raw.githubusercontent.com').replace('/blob/', '/')
     return url
 
-def clean_text(pdf_text: str) -> str:
-    # Remove line breaks
-    cleaned_text = pdf_text.replace('\n', ' ')
-
-    # Remove other non-human-readable indicators (like \x84 in your example)
-    cleaned_text = sub(r'\\x[0-9A-Fa-f]{2}', '', cleaned_text)
-
-    # Remove extra spaces
-    cleaned_text = sub(r'\s+', ' ', cleaned_text).strip()
-
-    return cleaned_text
-
 def find_most_similar_substrings(text, substrings):
     """
     Find the most similar substrings within text.

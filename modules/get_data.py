@@ -3,7 +3,7 @@ import fitz
 import io
 
 from modules.managers.folder_manager import check_folder_existence
-from modules.managers.string_manager import transform_github_url, clean_text
+from modules.managers.string_manager import transform_github_url
 
 
 def get_text_from_github(url: str) -> dict:
