@@ -5,6 +5,9 @@ from dotenv import load_dotenv
 load_dotenv()
 
 def get_API() -> str:
+    """
+        Get OpenAI API key from .env
+    """
     return os.getenv('OPENAI_API_KEY')
 
 if __name__ == '__main__':
