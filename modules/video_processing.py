@@ -11,6 +11,12 @@ from modules.managers.folder_manager import check_folder_existence, delete_file
 
 
 def extract_audio_from_video(video_path: str) -> str:
+    """
+        This function will load a saved video and extract the audio in 16kHz framerate
+        and then save it in a .wav format in a temporary folder.
+
+        :param video_path: A string representing where the saved video is located
+    """
     # Check how many temporary audios are within the temp/ folder
     amount_files = len(listdir('temp/'))
 
@@ -39,6 +45,17 @@ def extract_audio_from_video(video_path: str) -> str:
     return audio_path
 
 def transcript_video(video_path: str, model_performance: str = 'balanced') -> dict:
+    """
+        This function receives a saved video and then process it based on the Whisper
+        OpenAI object and transcript the audio to a text format. Based on the model
+        performance, the function will load a tiny, small or medium version of Whisper 
+        and being necessary 1, 2 or 5 GB of VRAM consecutively.
+
+        :param video_path: A string representing the path to a local video
+        :param model_performance: A string representing the Whisper model selection
+        :return: A dictionary containing the transcription of the video, segments of text 
+        and their time and other important metadata
+    """
     # Extract audio from video
     audio_path = extract_audio_from_video(video_path)
 
@@ -66,7 +83,12 @@ def transcript_video(video_path: str, model_performance: str = 'balanced') -> di
 
     delete_file(audio_path)
 
-    return result
+    segments = [
+        [x['text'] for x in result['segments']],
+        [[x['start'], x['end']] for x in result['segments']]
+    ]
+
+    return result['text'], segments
 
 
 if __name__ == '__main__':
