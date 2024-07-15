@@ -1,7 +1,9 @@
+# Python libraries
 import requests
 import fitz
 import io
 
+# Local imports
 from modules.managers.folder_manager import check_folder_existence
 from modules.managers.string_manager import transform_github_url
 

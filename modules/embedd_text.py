@@ -1,7 +1,7 @@
+# Python libraries
 import numpy as np
 
 from uuid import uuid4
-
 from langchain.docstore.document import Document
 
 # Local imports

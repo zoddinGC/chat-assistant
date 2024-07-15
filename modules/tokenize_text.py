@@ -1,5 +1,7 @@
+# Python libraries
 import tiktoken
 
+# Local imports
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 
 def tiktoken_len(text: str) -> int:
