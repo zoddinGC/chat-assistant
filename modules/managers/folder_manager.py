@@ -3,9 +3,9 @@ from shutil import rmtree
 
 def check_folder_existence(folder_path:str):
     """
-    Check if there's a folder in the given folder path. If not, try to create.
+        Check if there's a folder in the given folder path. If not, try to create.
 
-    :param folder_path: Relative path to check the folder
+        :param folder_path: Relative path to check the folder
     """
     try:
         try:
@@ -19,9 +19,9 @@ def check_folder_existence(folder_path:str):
 
 def clean_folder(folders:str or list, main_folder:bool=False):
     """
-    Delete all files and folders in the specified directory.
+        Delete all files and folders in the specified directory.
 
-    :param folder: Path to the folder to be cleaned.
+        :param folder: Path to the folder to be cleaned.
     """
     if isinstance(folders, str):
         folders = [folders]
@@ -50,6 +50,11 @@ def clean_folder(folders:str or list, main_folder:bool=False):
             rmtree(folder)
 
 def delete_file(file_path: str):
+    """
+        This function receives a file path string to delete it.
+
+        :param file_path: A string containing the file path to be deleted
+    """
     try:
         os.unlink(file_path)
     except Exception as e:
