@@ -2,16 +2,22 @@
 from langchain_openai import OpenAI, OpenAIEmbeddings
 from langchain_community.vectorstores import FAISS
 from langchain.chains.retrieval_qa.base import RetrievalQA
-from langchain.docstore.document import Document
 from uuid import uuid4
 
 # Local imports
 from modules.embedd_text import embedding_in_chunks
-from modules.get_api_key import get_API
 from modules.managers.folder_manager import check_folder_existence
 from modules.managers.string_manager import find_most_similar_substrings, find_best_match_positions
 
-OPENAI_API_KEY = get_API()
+def convert_seconds_to_minute(seconds:float) -> tuple[int, int]:
+    """
+        This function converts seconds (float like 123.66) to minutes 
+        and remaining seconds (2 minutes, 3 seconds)
+    """
+    minutes = seconds // 60
+    remaining_seconds = seconds % 60
+
+    return int(minutes), int(remaining_seconds)
 
 class IndexingData():
     def __init__(self, path: str or None=None) -> None:
@@ -45,7 +51,7 @@ class IndexingData():
 
         # Create the library and retriever with context
         self.__library = FAISS.from_documents(docs, OpenAIEmbeddings())
-        self.__QA = self.__create_retriever()
+        self.__QA = self.__create_QA()
 
     def search_index(self, query: str, top_k: int = 5) -> dict:
         """
@@ -105,7 +111,7 @@ class IndexingData():
 
             :param query: A string that will be provided to ChatGPT
             :param threshold: A flod representing the minimum confidence of the context found (close to 0 = best)
-        """      
+        """
         # Retrieve documents
         retrieved_docs = self.__library.similarity_search_with_score(query, k=3)
 
@@ -122,12 +128,13 @@ class IndexingData():
                 },
                 False
             )
-        
+
         return (
             self.__QA.invoke({
                 'query': query,
-                'run_name': str(uuid4())
-            }),
+                'run_name': str(uuid4()),
+                'language': 'portuguese',
+            }), 
             True
         )
     
@@ -176,9 +183,9 @@ class IndexingData():
         elif doc_type == 'video':
             segments = raw_data['video']
             times = find_best_match_positions(doc_text, segments[0])
-            start = segments[1][times[0]][0]
-            end   = segments[1][times[0]][1]
-            response = f'O documento de apoio está no vídeo entre os minutos {start}-{end}'
+            start_m, start_s = convert_seconds_to_minute(float(segments[1][times[0]][0]))
+            end_m, end_s   = convert_seconds_to_minute(float(segments[1][times[0]][1]))
+            response = f'O documento de apoio está no vídeo entre os minutos {start_m}:{start_s}-{end_m}:{end_s}'
 
         # Create a good response based on the provided ChatGPT's response + where the context was found
         response = answer['result'] + '\n' + response
