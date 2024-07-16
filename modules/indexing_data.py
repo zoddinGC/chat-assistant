@@ -8,7 +8,6 @@ from uuid import uuid4
 from modules.embedd_text import embedding_in_chunks
 from modules.managers.folder_manager import check_folder_existence
 from modules.managers.string_manager import find_most_similar_substrings, find_best_match_positions
-from modules.get_api_key import get_API
 
 def convert_seconds_to_minute(seconds:float) -> tuple[int, int]:
     """
@@ -20,10 +19,8 @@ def convert_seconds_to_minute(seconds:float) -> tuple[int, int]:
 
     return int(minutes), int(remaining_seconds)
 
-OPENAI_API_KEY = get_API()
-
 class IndexingData():
-    def __init__(self, path: str or None=None) -> None:
+    def __init__(self, api_key: str=None, path: str or None=None) -> None:
         """
             This class is designed to create a library from a provided data. The data needs
             to be in Document format and splitted in chunks. After indexing the data, you can
@@ -34,6 +31,12 @@ class IndexingData():
             :param path: If given, it will try to load a saved library locally. If not given, it will
             create just in the `create_library` method.
         """
+        # Check if OpenAI API Key was provided
+        if api_key:
+            self.__OPENAI_API_KEY = api_key
+        else:
+            self.__OPENAI_API_KEY = None
+        
         # Check if a path was provided. If yes, it will load a pre-saved context
         if path:
             self.__library = self.__load_local(path)
@@ -53,7 +56,7 @@ class IndexingData():
         docs = embedding_in_chunks(data=data)
 
         # Create the library and retriever with context
-        self.__library = FAISS.from_documents(docs, OpenAIEmbeddings(api_key=OPENAI_API_KEY))
+        self.__library = FAISS.from_documents(docs, OpenAIEmbeddings(api_key=self.__OPENAI_API_KEY))
         self.__QA = self.__create_QA()
 
     def search_index(self, query: str, top_k: int = 5) -> dict:
@@ -97,7 +100,7 @@ class IndexingData():
 
         # Create a Question&Answer object to get ChatGPT response
         qa = RetrievalQA.from_chain_type(
-            llm=OpenAI(api_key=OPENAI_API_KEY),
+            llm=OpenAI(api_key=self.__OPENAI_API_KEY),
             chain_type='stuff',
             retriever=retriever,
             return_source_documents=True
@@ -221,7 +224,7 @@ class IndexingData():
         """
         return FAISS.load_local(
             path,
-            OpenAIEmbeddings(api_key=OPENAI_API_KEY),
+            OpenAIEmbeddings(api_key=self.__OPENAI_API_KEY),
             allow_dangerous_deserialization=True
         )
        
