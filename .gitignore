@@ -1,5 +1,5 @@
 # Ignore virtual environment
-env/
+env*/
 
 # Temporary folder
 temp/
