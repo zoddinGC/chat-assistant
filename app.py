@@ -2,7 +2,6 @@
 import streamlit as st
 import json
 import html
-from openai import OpenAI
 
 # Local imports
 from modules.indexing_data import IndexingData
