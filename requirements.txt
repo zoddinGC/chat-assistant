@@ -4,6 +4,7 @@ langchain_community==0.2.7
 langchain_openai==0.1.16
 moviepy==1.0.3
 numpy<2.0.0
+faiss-cpu==1.7.4
 openai==1.35.14
 openai_whisper==20231117
 pydub==0.25.1
