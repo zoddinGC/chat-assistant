@@ -20,7 +20,7 @@ def convert_seconds_to_minute(seconds:float) -> tuple[int, int]:
     return int(minutes), int(remaining_seconds)
 
 class IndexingData():
-    def __init__(self, api_key: str=None, path: str or None=None) -> None:
+    def __init__(self, api_key: str, path: str or None=None) -> None:
         """
             This class is designed to create a library from a provided data. The data needs
             to be in Document format and splitted in chunks. After indexing the data, you can
@@ -32,10 +32,7 @@ class IndexingData():
             create just in the `create_library` method.
         """
         # Check if OpenAI API Key was provided
-        if api_key:
-            self.__OPENAI_API_KEY = api_key
-        else:
-            self.__OPENAI_API_KEY = None
+        self.__OPENAI_API_KEY = api_key
         
         # Check if a path was provided. If yes, it will load a pre-saved context
         if path:
