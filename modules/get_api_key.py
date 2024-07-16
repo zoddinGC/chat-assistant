@@ -3,13 +3,13 @@ import os
 from dotenv import load_dotenv
 import openai
 
-# Load environment variables from .env file
-load_dotenv()
-
 def get_API() -> str:
     """
         Get OpenAI API key from .env
     """
+    # Load environment variables from .env file
+    load_dotenv()
+
     return os.getenv('OPENAI_API_KEY')
 
 def write_API(api_key: str):
@@ -21,7 +21,7 @@ def write_API(api_key: str):
     # Create and open the .env file in write mode
     with open('.env', 'w') as file:
         # Write the content to the file
-        file.write(api_key)
+        file.write('OPENAI_API_KEY=' + api_key.strip())
 
 def test_openai_api_key(api_key: str) -> tuple[bool, str]:
     """
