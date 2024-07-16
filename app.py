@@ -137,13 +137,13 @@ elif tab_choice == "Load Data":
             video_path = 'data/video/default_video.mp4'
             # Download and save video
             save_video_from_github(video, save_path=video_path)
-            
+
             # Transcript the video to text
             video_content, segments = transcript_video(video_path, model_performance='balanced')
             st.session_state.video_url = video
 
             st.success(success_message)
-        except:
+        except Exception as e:
             st.warning(error_message)
 
     # Check if all variables are equal to None
@@ -152,7 +152,7 @@ elif tab_choice == "Load Data":
     # Disabled tabs with
     if any(variables) and not all(variables) and not st.session_state.disabled_tab:
         disable_tab(condition=True)
-    elif all(variables):
+    elif all(variables) and 'video_url' in st.session_state:
         if video_content and segments:
             # Create data dict to insert into library
             data={
