@@ -8,6 +8,7 @@ from uuid import uuid4
 from modules.embedd_text import embedding_in_chunks
 from modules.managers.folder_manager import check_folder_existence
 from modules.managers.string_manager import find_most_similar_substrings, find_best_match_positions
+from modules.get_api_key import get_API
 
 def convert_seconds_to_minute(seconds:float) -> tuple[int, int]:
     """
@@ -18,6 +19,8 @@ def convert_seconds_to_minute(seconds:float) -> tuple[int, int]:
     remaining_seconds = seconds % 60
 
     return int(minutes), int(remaining_seconds)
+
+OPENAI_API_KEY = get_API()
 
 class IndexingData():
     def __init__(self, path: str or None=None) -> None:
@@ -50,7 +53,7 @@ class IndexingData():
         docs = embedding_in_chunks(data=data)
 
         # Create the library and retriever with context
-        self.__library = FAISS.from_documents(docs, OpenAIEmbeddings())
+        self.__library = FAISS.from_documents(docs, OpenAIEmbeddings(api_key=OPENAI_API_KEY))
         self.__QA = self.__create_QA()
 
     def search_index(self, query: str, top_k: int = 5) -> dict:
@@ -94,7 +97,7 @@ class IndexingData():
 
         # Create a Question&Answer object to get ChatGPT response
         qa = RetrievalQA.from_chain_type(
-            llm=OpenAI(),
+            llm=OpenAI(api_key=OPENAI_API_KEY),
             chain_type='stuff',
             retriever=retriever,
             return_source_documents=True
@@ -176,7 +179,8 @@ class IndexingData():
 
             page = find_most_similar_substrings(doc_text, pdf_content['pages_text'])
             if len(page) > 1:
-                response = f'O documento de apoio encontra-se entre as páginas {page[0]} e {page[1]} do PDF'
+                pg1, pg2 = min(page), max(page)
+                response = f'O documento de apoio encontra-se entre as páginas {pg1} e {pg2} do PDF'
             else:
                 response  = f'O documento de apoio encontra-se na a página {page[0]} do PDF'
 
@@ -217,7 +221,7 @@ class IndexingData():
         """
         return FAISS.load_local(
             path,
-            OpenAIEmbeddings(),
+            OpenAIEmbeddings(api_key=OPENAI_API_KEY),
             allow_dangerous_deserialization=True
         )
        
