@@ -18,6 +18,7 @@ def extract_audio_from_video(video_path: str) -> str:
         :param video_path: A string representing where the saved video is located
     """
     # Check how many temporary audios are within the temp/ folder
+    check_folder_existence('temp/')
     amount_files = len(listdir('temp/'))
 
     # Create a temporary audio path
