@@ -1,7 +1,7 @@
 # Python libraries
 import numpy as np
 
-from re import findall, sub, compile, IGNORECASE
+from re import findall
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
