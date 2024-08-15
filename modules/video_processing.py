@@ -45,7 +45,7 @@ def extract_audio_from_video(video_path: str) -> str:
 
     return audio_path
 
-def transcript_video(video_path: str, model_performance: str = 'balanced') -> dict:
+def transcript_video(video_path: str, model_performance: str = 'balanced') -> tuple[str, dict]:
     """
         This function receives a saved video and then process it based on the Whisper
         OpenAI object and transcript the audio to a text format. Based on the model
@@ -53,9 +53,11 @@ def transcript_video(video_path: str, model_performance: str = 'balanced') -> di
         and being necessary 1, 2 or 5 GB of VRAM consecutively.
 
         :param video_path: A string representing the path to a local video
-        :param model_performance: A string representing the Whisper model selection
-        :return: A dictionary containing the transcription of the video, segments of text 
-        and their time and other important metadata
+        :param model_performance: A string representing the Whisper model selection. Can be
+        'speed', 'balanced' or 'accuracy' and uses VRAM (GPU)
+        :return: A tuple containing the text extract and a dictionary containing the
+        transcription of the video, segments of text and their time and other
+        important metadata
     """
     # Extract audio from video
     audio_path = extract_audio_from_video(video_path)
